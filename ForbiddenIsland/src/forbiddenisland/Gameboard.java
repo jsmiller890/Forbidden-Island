@@ -9,10 +9,15 @@ import java.util.Arrays;
  * @author Jeremy Miller
  */
 public class Gameboard {
+    
+    //Loading the other classes
+    
     IslandTile[] IslandTile = new IslandTile[24];
     FloodCardDeck FloodDeck = new FloodCardDeck();
     Player[] Player;
     TreasureCardDeck TreasureCards = new TreasureCardDeck();
+    
+    //Declarations of variables
     
     int[] waterLevel = {2, 2, 3, 3, 3, 4, 4, 5, 5, 6};
     int currentWaterLevel = 0;
@@ -55,6 +60,8 @@ public class Gameboard {
         this.endGame = endGame;
     }
     
+    //Creates the tiles to be used for the gameboard
+    
     public void CreateTiles()
     {
         for(int i = 0; i < IslandTile.length; i++)
@@ -74,10 +81,14 @@ public class Gameboard {
         }
     }
     
+    //Gives each tile a number based on row and column on the gameboard
+    
     public void AssignTileLocation(int tileNumber)
     {
         IslandTile[tileNumber].tileLocation = possibleTiles[tileNumber];
     }
+    
+    //Sets tile state from shored to flooded or flooded to removed
     
     public void SetFlooded(int tileNumber)
     {
@@ -91,6 +102,8 @@ public class Gameboard {
                 break;
         }
     }
+    
+    //Sets the tile to shored
     
     public void SetShored(int tileNumber)
     {
@@ -109,6 +122,8 @@ public class Gameboard {
         }
     }
     
+    //Checks which tile card has been drawn then calls setflooded method
+    
     public void FloodTile()
     {
         for (int i = 0; i < IslandTile.length; i++)
@@ -119,6 +134,8 @@ public class Gameboard {
             }
         }
     }
+    
+    //Gameboard that serves a map for the players
     
     public void PrintGameboard()
     {
@@ -167,6 +184,7 @@ public class Gameboard {
                          + "                            |-------------|-------------|\n");
     }
     
+    //The first thing the player sees
     
     public void WelcomeScreen()
     {
@@ -233,6 +251,9 @@ public class Gameboard {
             }
         }
     }
+    
+    //The setup process for the game (eg. shuffle decks of cards, assign players adventurer titles
+    
     public void Setup()
     {
         TreasureCards.ShuffleDeck();
@@ -281,6 +302,9 @@ public class Gameboard {
         }
         FloodDeck.Refresh();
     }
+    
+    //The turn each player takes until the game is won or lost
+    
     public void PlayerTurn()
     {
         while(endGame != true)
@@ -300,7 +324,7 @@ public class Gameboard {
                     {
                         System.out.println("Please enter a valid choice: ");
                         actionChoice = scnr.nextInt();
-                    }
+                    }                    
                     switch(actionChoice)
                         {
                             case 1:
@@ -625,11 +649,14 @@ public class Gameboard {
             }
         }
     }
+    
+    //Checks if the player entered number matches a possible move
+    
     public void CheckValidTile(int player)
     {
-        for(int f = 0; f < Player[player].possibleMoves.length; f++)//:Player[player].possibleMoves)
+        for(int f = 0; f < Player[player].possibleMoves.length; f++)
         {
-            for(int g = 0; g < outofBounds.length; g++)// : outofBounds)
+            for(int g = 0; g < outofBounds.length; g++)
             {
                 if(Player[player].possibleMoves[f] == outofBounds[g] || Player[player].possibleMoves[f] < 0)
                 {
@@ -638,6 +665,9 @@ public class Gameboard {
             }
         }
     }
+    
+    //Sets player to an adventurer
+    
     public void SetAdventurer()
     {
         for (int i = 0; i < adventurers.length; i++) {
@@ -651,6 +681,9 @@ public class Gameboard {
             Player[i].adventurer = adventurers[i];
         }
     }
+    
+    //Sets player starting tile (this is always the same)
+    
     public void SetPlayerStartingLocation()
     {
         for(Player c : Player)
@@ -684,6 +717,9 @@ public class Gameboard {
             }
         }
     }
+    
+    //Checks if the tiles containing treasures has been lost to the depths and the game is lost
+    
     public void TreasureLostCheck()
     {
         for(IslandTile t : IslandTile)
@@ -697,6 +733,9 @@ public class Gameboard {
             }
         }
     }
+    
+    //Checks if the player is on a flooded or removed tile
+    
     public int[] PlayerTileCheck()
     {
         int[] playerLocations = new int[4];
