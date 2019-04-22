@@ -4,37 +4,59 @@ package forbiddenisland;
  *
  * @author Jeremy Miller
  */
+
 public class IslandTile {
-    String[] words;
-    String firstWord = "";
-    String secondWord = "";
-    String thirdWord = "";
-    String tileName = "";
-    int tileLocation = 0;
-    String floodStatus = "           "; //           , //Flooded//, **Removed**
-    int tilePane = 0;
+    String tileFullName;
+    String firstWord = "           ";
+    String secondWord = "           ";
+    String thirdWord = "           ";
+    String floodStatus = "           ";
     String player1 = "  ";
     String player2 = "  ";
     String player3 = "  ";
     String player4 = "  ";
+    String tileRow;
     
+    int tileColumn;
     
-    public void IslandTile(String[] words, String firstWord, String secondWord, int tilePane,
-                           String thirdWord, String floodStatus, int tileLocation, String tileName)
-    {
-        this.words = words;
+    String line_1 = "|-------------|";
+    String line_2 = String.format("| %s |", floodStatus);
+    String line_3 = "|             |";
+    String line_4 = "|             |";
+    String line_5 = "|             |";
+    String line_6 = String.format("| %1$s %2$s %3$s %4$s |", player1, player2, player3, player4);
+    String line_7 = "|             |";
+    String line_8 = "|-------------|";
+    
+    public void IslandTile(String tileFullName, String firstWord, String secondWord, String thirdWord,
+                            String floodStatus, String player1, String player2, String player3, String player4,
+                            String tileRow, int tileColumn, String line_1, String line_2, String line_3,
+                            String line_4, String line_5, String line_6, String line_7, String line_8) {
+        
+        this.tileFullName = tileFullName;
         this.firstWord = firstWord;
         this.secondWord = secondWord;
         this.thirdWord = thirdWord;
         this.floodStatus = floodStatus;
-        this.tileName = tileName;
-        this.tileLocation = tileLocation;
-        this.tilePane = tilePane;
+        this.player1 = player1;
+        this.player2 = player2;
+        this.player3 = player3;
+        this.player4 = player4;
+        this.tileRow = tileRow;
+        this.tileColumn = tileColumn;
+        this.line_1 = line_1;
+        this.line_2 = line_2;
+        this.line_3 = line_3;
+        this.line_4 = line_4;
+        this.line_5 = line_5;
+        this.line_6 = line_6;
+        this.line_7 = line_7;
+        this.line_8 = line_8;
+        
+        SplitTileName(tileFullName);
     }
     
-    
-    public String CheckName(String wordToCheck)
-    {
+    public String CheckName(String wordToCheck){
         for(int i = wordToCheck.length(); i < 11; i++)
         {
             wordToCheck = wordToCheck + " ";
@@ -42,87 +64,89 @@ public class IslandTile {
         return wordToCheck;
     }
     
-    public String[] SplitName(String islandName)
-    {
-        tileName = islandName;
-        if(islandName.contains("of the"))
-        {
+    private void SplitTileName(String tileName){
+        tileFullName = tileName;
+        if(tileName.contains("of the")){
             secondWord = "of the     ";
-            islandName = islandName.replace("of the", "the");
-            words = islandName.split(" ");
-            firstWord = words[0];
-            words[1] = secondWord;
-            thirdWord = words[2];
-            firstWord = CheckName(firstWord);
-            secondWord = CheckName(secondWord);
-            thirdWord = CheckName(thirdWord);
-            return words;
+            String[] tileSplitName = tileName.split(" ");
+            firstWord = CheckName(tileSplitName[0]);
+            thirdWord = CheckName(tileSplitName[3]);
         }
-        else
-        {
-            words = islandName.split(" ");
-            for(int i = 0; i < words.length; i++)
+        else{
+            String[] tileSplitName = tileName.split(" ");
+            for(int i = 0; i < tileSplitName.length; i++)
             {
                 switch(i){
                     case 0:
-                        firstWord = words[i];
+                        firstWord = CheckName(tileSplitName[i]);
                         break;
                     case 1:
-                        secondWord = words[i];
+                        secondWord = CheckName(tileSplitName[i]);
                         break;
                     case 2:
-                        thirdWord = words[i];
+                        thirdWord = CheckName(tileSplitName[i]);
                         break;
                 }
             }
-            firstWord = CheckName(firstWord);
-            secondWord = CheckName(secondWord);
-            thirdWord = CheckName(thirdWord);
-            return words;
         }
-        
     }
-    public String GetFloodStatus()
-    {
-        return floodStatus;
+    
+    public void SetFlooded(){
+        if(floodStatus.equals("           ")){
+            floodStatus = "//FLOODED//";
+        }
+        else if (floodStatus.equals("//FLOODED//")){
+            floodStatus = "**REMOVED**";
+        }
     }
-    public void SetFloodStatus(String changeStatus)
-    {
-        floodStatus = changeStatus;
+    
+    public void SetShored(){
+        floodStatus = "           ";
     }
-    public void SetPlayerLocation(int[] playerLocations)
-    {
-        if(playerLocations[0] == tileLocation)
-        {
+    
+    public void SetTileRow(String row){
+        tileRow = row;
+    }
+    
+    public void SetTileColumn(int column){
+        tileColumn = column;
+    }
+    
+    public void SetTile(){
+        line_1 = "|-------------|";
+        line_2 = String.format("| %s |", floodStatus);
+        line_3 = String.format("| %s |", firstWord);
+        line_4 = String.format("| %s |", secondWord);
+        line_5 = String.format("| %s |", thirdWord);
+        line_6 = String.format("| %1$s %2$s %3$s %4$s |", player1, player2, player3, player4);
+        line_7 = String.format("|       %1$d%2$d        |", tileRow, tileColumn);
+        line_8 = "|-------------|";
+    }
+    
+    public void SetPlayerLocations(Player[] player){
+        if(player[0].row == tileRow && player[0].column == tileColumn){
             player1 = "P1";
         }
-        else if (playerLocations[0] != tileLocation)
-        {
+        else{
             player1 = "  ";
         }
-        if (playerLocations[1] == tileLocation)
-        {
-            player2 = "P2";
+        if(player[1].row == tileRow && player[1].column == tileColumn){
+            player2 = "P1";
         }
-        else if (playerLocations[1] != tileLocation)
-        {
+        else {
             player2 = "  ";
         }
-        if (playerLocations[2] == tileLocation)
-        {
-            player3 = "P3";
+        if(player[2].row == tileRow && player[2].column == tileColumn){
+            player3 = "P1";
         }
-        else if (playerLocations[2] != tileLocation)
-        {
+        else {
             player3 = "  ";
         }
-        if (playerLocations[3] == tileLocation)
-        {
-            player4 = "P4";
+        if(player[3].row == tileRow && player[3].column == tileColumn){
+            player4 = "P1";
         }
-        else if (playerLocations[3] != tileLocation)
-        {
+        else {
             player4 = "  ";
         }
-    }    
+    }
 }
